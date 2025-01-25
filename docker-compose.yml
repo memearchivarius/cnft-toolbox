@@ -1,0 +1,40 @@
+version: "3.1"
+
+services:
+
+  db:
+    image: postgres
+    container_name: "cnft-db"
+    restart: always
+    env_file: .env
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: "cnft-redis"
+    restart: always
+    volumes:
+      - ./redis/data:/data
+
+  api:
+    build: ./api
+    container_name: "cnft-api"
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file: .env
+    volumes:
+      - ./api/:/api
+    depends_on:
+      - db
+
+  bot:
+    build: ./bot
+    container_name: "cnft-bot"
+    restart: always
+    env_file: .env
+    depends_on:
+      - redis
+    volumes:
+      - ./bot/:/bot
