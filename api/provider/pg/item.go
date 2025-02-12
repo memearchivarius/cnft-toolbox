@@ -2,7 +2,6 @@ package pg
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	myaddr "github.com/ton-community/compressed-nft-api/address"
@@ -33,10 +32,10 @@ func (ip *ItemProvider) Count() (uint64, error) {
 	return count, err
 }
 
-func makeMetadata(index uint64, owner *address.Address) *data.ItemMetadata {
+func makeMetadata(_ uint64, owner *address.Address) *data.ItemMetadata {
 	return &data.ItemMetadata{
 		Owner:             &myaddr.Address{Address: owner},
-		IndividualContent: cell.BeginCell().MustStoreStringSnake(strconv.FormatUint(index, 10) + ".json").EndCell(),
+		IndividualContent: cell.BeginCell().MustStoreStringSnake("item.json").EndCell(),
 	}
 }
 
