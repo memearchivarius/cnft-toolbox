@@ -196,7 +196,18 @@ func (h *Handler) getAddress(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
 
-	index, err := h.ItemProvider.GetIndex(ir.Address)
+    addr, err := address.ParseAddr(ir.Address)
+    if err != nil {
+        addr, err = address.ParseRawAddr(ir.Address)
+        if err != nil {
+            log.Err(err).Msgf("Both ParseAddr and ParseRawAddr failed: %v", ir.Address)
+            return c.String(http.StatusBadRequest, "invalid address format")
+        }
+    }
+
+    owner := addr.Bounce(false).Testnet(false).String()
+
+	index, err := h.ItemProvider.GetIndex(owner)
 	if err != nil {
 		log.Err(err).Msg("bad getIndex request")
 		return c.String(http.StatusBadRequest, "bad request")
