@@ -1,5 +1,3 @@
-version: "3.1"
-
 services:
 
   db:
@@ -18,7 +16,7 @@ services:
       - ./redis/data:/data
 
   api:
-    build: ./api
+    image: ghcr.io/nessshon/cnft-api:latest
     container_name: "cnft-api"
     restart: always
     ports:
@@ -30,7 +28,7 @@ services:
       - db
 
   bot:
-    build: ./bot
+    image: ghcr.io/nessshon/cnft-bot:latest
     container_name: "cnft-bot"
     restart: always
     env_file: .env

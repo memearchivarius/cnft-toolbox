@@ -282,7 +282,7 @@ func add(cmd *cobra.Command, args []string) error {
 				return err
 			}
 
-			owner := addr.String()
+			owner := addr.Bounce(false).Testnet(false).String()
 			_, err = tx.Exec(ctx, "INSERT INTO items (id, owner) VALUES ($1, $2)", index, owner)
 			if err != nil {
 				pgErr, ok := err.(*pgconn.PgError)
